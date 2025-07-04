@@ -59,4 +59,6 @@ Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkou
 Route::post('/checkout', [CartController::class, 'processCheckout'])->name('cart.processCheckout');
 Route::get('/order/confirmation/{order}', [CartController::class, 'orderConfirmation'])->name('order.confirmation');
 
+Route::middleware('auth')->get('/my-orders', [\App\Http\Controllers\OrderController::class, 'index'])->name('orders.index');
+
 require __DIR__.'/auth.php';

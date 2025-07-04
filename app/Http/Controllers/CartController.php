@@ -126,6 +126,9 @@ class CartController extends Controller
 
         // Send confirmation email
         \Mail::to($order->email)->send(new \App\Mail\OrderConfirmationMail($order->load('items')));
+        // Send admin notification
+        $adminEmail = config('mail.from.address');
+        \Mail::to($adminEmail)->send(new \App\Mail\AdminOrderNotificationMail($order));
 
         session()->forget('cart');
         return redirect()->route('order.confirmation', ['order' => $order->id]);

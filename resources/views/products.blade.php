@@ -519,9 +519,9 @@
                              data-price="{{ $product->price }}">
                             <div class="card product-card h-100 position-relative overflow-hidden">
                                 <div class="position-relative">
-                                    <img src="https://source.unsplash.com/400x400/?cosmetics,{{ urlencode($product->name) }}" 
-                                         class="card-img-top product-image" 
-                                         alt="{{ $product->name }}">
+                                    <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default-product.png') }}"
+                                         alt="{{ $product->name }}"
+                                         class="img-fluid rounded shadow-sm" style="max-height: 180px;">
                                     @if($product->stock > 0)
                                         <span class="stock-badge">
                                             <i class="fas fa-check me-1"></i>En stock

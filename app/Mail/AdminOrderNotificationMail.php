@@ -14,11 +14,16 @@ class AdminOrderNotificationMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
+     * The order instance.
+     */
+    public $order;
+
+    /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct($order)
     {
-        //
+        $this->order = $order;
     }
 
     /**
@@ -38,6 +43,9 @@ class AdminOrderNotificationMail extends Mailable
     {
         return new Content(
             markdown: 'emails.admin-order-notification',
+            with: [
+                'order' => $this->order
+            ]
         );
     }
 
