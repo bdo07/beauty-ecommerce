@@ -68,7 +68,14 @@
                             <p class="card-text flex-grow-1">{{ Str::limit($product->description, 60) }}</p>
                             <div class="d-flex justify-content-between align-items-center mt-2">
                                 <span class="fw-bold text-success">{{ number_format($product->price, 2) }} €</span>
-                                <a href="#" class="btn btn-sm btn-outline-primary">Ajouter au panier</a>
+                                <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-shopping-cart me-1"></i>Ajouter au panier
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

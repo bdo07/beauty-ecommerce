@@ -374,7 +374,12 @@
                             <li><a class="dropdown-item" href="#">Mon profil</a></li>
                             <li><a class="dropdown-item" href="#">Mes commandes</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/logout">Déconnexion</a></li>
+                            <li>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item">Déconnexion</button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                     @else
@@ -553,18 +558,16 @@
                                             <i class="fas fa-box me-1"></i>{{ $product->stock }}
                                         </small>
                                     </div>
-                                    <div class="mt-auto">
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <span class="price-tag">{{ number_format($product->price, 2) }} €</span>
-                                        </div>
-                                        <div class="d-grid gap-2 d-md-none">
-                                            <button class="btn btn-primary" onclick="addToCart({{ $product->id }})">
-                                                <i class="fas fa-shopping-cart me-2"></i>Ajouter au panier
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <span class="fw-bold text-success">{{ number_format($product->price, 2) }} €</span>
+                                        <form action="{{ route('cart.add') }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                            <input type="hidden" name="quantity" value="1">
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">
+                                                <i class="fas fa-shopping-cart me-1"></i>Ajouter au panier
                                             </button>
-                                            <button class="btn btn-outline-secondary btn-sm" onclick="window.location.href='{{ route('product.detail', $product->id) }}'">
-                                                <i class="fas fa-eye me-1"></i>Voir détails
-                                            </button>
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -726,5 +729,12 @@
             setDarkMode(false);
         }
     </script>
+
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 </body>
 </html> 

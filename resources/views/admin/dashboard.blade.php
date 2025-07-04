@@ -77,7 +77,7 @@ body.dark-mode .btn-primary {
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 mb-4">
                 <div class="card-body">
                     <h1 class="card-title mb-4">Bienvenue sur le tableau de bord Admin</h1>
                     <div class="row text-center mb-4">
@@ -107,6 +107,123 @@ body.dark-mode .btn-primary {
                         </div>
                     </div>
                     <p class="lead">Gérez vos produits, catégories, commandes et utilisateurs depuis ce tableau de bord.</p>
+                </div>
+            </div>
+            <!-- Product Management Section -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">Gestion des produits</h2>
+                        <a href="{{ route('admin.products.create') }}" class="btn btn-success">+ Ajouter un produit</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle bg-white">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nom</th>
+                                    <th>Catégorie</th>
+                                    <th>Prix</th>
+                                    <th>Stock</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(\App\Models\Product::with('category')->latest()->limit(10)->get() as $product)
+                                    <tr>
+                                        <td>{{ $product->id }}</td>
+                                        <td>{{ $product->name }}</td>
+                                        <td>{{ $product->category->name ?? '-' }}</td>
+                                        <td>{{ number_format($product->price, 2) }} €</td>
+                                        <td>{{ $product->stock }}</td>
+                                        <td>{{ Str::limit($product->description, 40) }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-primary">Éditer</a>
+                                            <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce produit ?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="{{ route('admin.products.index') }}" class="btn btn-link">Voir tous les produits</a>
+                </div>
+            </div>
+            <!-- Category Management Section -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h2 class="mb-0">Gestion des catégories</h2>
+                        <a href="#" class="btn btn-success disabled">+ Ajouter une catégorie</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle bg-white">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Nom</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(\App\Models\Category::latest()->limit(10)->get() as $category)
+                                    <tr>
+                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $category->name }}</td>
+                                        <td>{{ Str::limit($category->description, 40) }}</td>
+                                        <td>
+                                            <a href="#" class="btn btn-sm btn-primary disabled">Éditer</a>
+                                            <form action="#" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger disabled">Supprimer</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="#" class="btn btn-link disabled">Voir toutes les catégories</a>
+                </div>
+            </div>
+            <!-- Recent Orders Section -->
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <h2 class="mb-3">Commandes récentes</h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle bg-white">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Client</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Détails</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(\App\Models\Order::latest()->limit(10)->get() as $order)
+                                    <tr>
+                                        <td>{{ $order->id }}</td>
+                                        <td>{{ $order->user->name ?? 'Invité' }}</td>
+                                        <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                                        <td>{{ number_format($order->items->sum(fn($item) => $item->price * $item->quantity), 2) }} €</td>
+                                        <td><span class="badge bg-success">Validée</span></td>
+                                        <td><a href="#" class="btn btn-sm btn-info disabled">Voir</a></td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="#" class="btn btn-link disabled">Voir toutes les commandes</a>
                 </div>
             </div>
         </div>
